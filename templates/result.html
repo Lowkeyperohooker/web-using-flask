@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/result.css') }}">
+    <script type="text/javascript" src="{{ url_for('static', filename='js/result.js') }}"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="result-card">
+            <h1>Final Results</h1>
+            <div class="results-container">
+                {% for key, value in result.items() %}
+                    <div class="result-item">
+                        <span class="subject">{{ key }}</span>
+                        <span class="grade">{{ value }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+            <a href="/" class="back-btn">Back to Form</a>
+        </div>
+    </div>
+</body>
+</html>
