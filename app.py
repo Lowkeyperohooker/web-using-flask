@@ -10,25 +10,36 @@ def show():
 
 @app.route('/result/<int:score>')
 def result(score):
-    res=''
-    if score>=50:
-        res='Pass'
-    else:
-        res='Fail'
-    result = {'Score':score, 'Result':res}
+    # Determine pass or fail based on score
+    res = 'Pass' if score >= 50 else 'Fail'
+    result = {'Score': score, 'Result': res}
     return render_template('result.html', result=result)
 
 
 @app.route('/submit', methods=['POST'])
 def submit():
-    total_marks = 0
     if request.method == 'POST':
-        mathh = request.form['math']
-        science = request.form['science']
-        english = request.form['english']
-        total_marks = (float(mathh) + float(science) + float(english))//3
-    return redirect(url_for('result', score=total_marks))
+        try:
+            # Get the input marks
+            mathh = float(request.form['math'])
+            science = float(request.form['science'])
+            english = float(request.form['english'])
+            
+            # Calculate the average score
+            total_marks = (mathh + science + english) / 3
+            
+            # Redirect to result page with the computed score
+            return redirect(url_for('result', score=int(total_marks)))
+        
+        except ValueError:
+            # Handle invalid input (non-numeric values)
+            error_message = "Please enter valid numbers for all subjects."
+            return render_template('index.html', error_message=error_message)
 
-if __name__=='__main__':
+    return redirect(url_for('show'))
+
+
+if __name__ == '__main__':
+    # Set the port dynamically (can be used for Heroku or local)
     PORT = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=PORT, debug=True)
+    app.run(host='0.0.0.0', port=PORT, debug=True)
